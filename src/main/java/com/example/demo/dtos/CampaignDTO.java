@@ -2,12 +2,16 @@ package com.example.demo.dtos;
 
 import com.example.demo.entities.Campaign;
 import com.example.demo.entities.City;
+import com.example.demo.entities.Keyword;
 import com.example.demo.entities.Seller;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public record CampaignDTO(
         Long id,
         String name,
-        String keyword,
+        Set<String> keywordsNames,
         double price,
         double fund,
         boolean status,
@@ -19,7 +23,7 @@ public record CampaignDTO(
         return new CampaignDTO(
                 campaign.getId(),
                 campaign.getName(),
-                campaign.getKeyword(),
+                campaign.getKeywords().stream().map(Keyword::getName).collect(Collectors.toSet()),
                 campaign.getPrice(),
                 campaign.getFund(),
                 campaign.isStatus(),

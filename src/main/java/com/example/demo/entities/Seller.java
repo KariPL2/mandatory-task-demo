@@ -14,6 +14,9 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String role = "ROLE_FREE_USER";
+
     @Column(unique = true)
     private String username;
 

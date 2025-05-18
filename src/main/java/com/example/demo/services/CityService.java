@@ -1,8 +1,13 @@
 package com.example.demo.services;
 
 
+import com.example.demo.dtos.CityDTO;
 import com.example.demo.repositories.CityRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CityService {
@@ -13,11 +18,19 @@ public class CityService {
         this.cityRepository = cityRepository;
     }
 
-    public boolean findByName(String name) {
-        return cityRepository.findByName(name).orElseThrow(() -> new RuntimeException("City not found with name: " + name)) != null;
+    public CityDTO findByName(String name) {
+       return cityRepository.findByName(name)
+                .map(CityDTO::fromEntity).orElseThrow(()-> new RuntimeException("City not found with name: " + name));
     }
-    public boolean findById(long id) {
-        return cityRepository.findById(id).orElseThrow( () -> new RuntimeException("City not found with id: " + id)) != null;
+    public CityDTO findById(long id) {
+       return cityRepository.findById(id)
+                .map(CityDTO::fromEntity).orElseThrow(()-> new RuntimeException("City not found with id: " + id));
+    }
+
+    public List<CityDTO> findAll(){
+        return cityRepository.findAll().stream()
+                .map(CityDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 
 

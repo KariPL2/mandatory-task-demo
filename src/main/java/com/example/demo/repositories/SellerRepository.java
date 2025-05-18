@@ -10,14 +10,17 @@ import java.util.Optional;
 
 @Repository
 public interface SellerRepository extends JpaRepository<Seller,Long> {
-
+    @EntityGraph(attributePaths = {"campaigns"})
     Optional<Seller> findById(long id);
+
+    @EntityGraph(attributePaths = {"campaigns"})
     Optional<Seller> findByUsername(String username);
-    Optional<Seller> findByEmail(String email);
+
+
     boolean existsByEmail(String email);
     boolean existsByUsername(String username);
-    @EntityGraph(attributePaths = "campaigns")
-    Optional<Seller> findWithCampaignsById(Long id);
+
+
 
     @EntityGraph(attributePaths = {"campaigns"})
     List<Seller> findAll();
