@@ -39,6 +39,6 @@ public class KeywordService {
         }
         List<Keyword> foundKeywords = keywordRepository.findByNameInIgnoreCase(names);
 
-        return new HashSet<>(foundKeywords); // Zwróć Set znalezionych encji Keyword
+        return new HashSet<>(foundKeywords);
     }
 }

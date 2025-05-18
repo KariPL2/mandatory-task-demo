@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Management</title>
+    <link rel="stylesheet" href="style.css"> <style>
+    /* Podstawowe style do zarządzania widocznością sekcji */
+    .section { display: none; padding: 15px; border: 1px solid #ccc; margin-bottom: 20px; border-radius: 5px;}
+    #public-section { display: block; } /* Sekcja publiczna widoczna na początku */
+    .auth-section { display: none; padding: 10px; border: 1px solid #eee; margin-top: 10px; border-radius: 4px;} /* Sekcje wewnątrz zalogowanego użytkownika */
+    #campaigns-list-section { display: block; } /* Domyślny widok po zalogowaniu */
+
+    /* Styl dla aktywnego przycisku nawigacji */
+    .nav-button.active-nav {
+        background-color: #007bff;
+        color: white;
+    }
+
+    /* Styl dla tagów słów kluczowych */
+    .keyword-tag {
+        display: inline-block;
+        background-color: #e0e0e0;
+        border-radius: 3px;
+        padding: 2px 5px;
+        margin-right: 5px;
+        margin-bottom: 5px;
+        font-size: 0.9em;
+    }
+
+    .keyword-tag .remove-keyword {
+        margin-left: 5px;
+        cursor: pointer;
+        border: none;
+        background: none;
+        padding: 0;
+        font-weight: bold;
+    }
+
+    /* Styl dla sugestii typeahead */
+    .suggestions-dropdown {
+        position: absolute;
+        z-index: 100;
+        background-color: white;
+        border: 1px solid #ccc;
+        max-height: 150px;
+        overflow-y: auto;
+        width: auto; /* Dostosuj do zawartości */
+        min-width: 150px; /* Minimalna szerokość */
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        display: none;
+    }
+
+    .suggestion-item {
+        padding: 8px 10px;
+        cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+        background-color: #f0f0f0;
+    }
+    /* Upewnij się, że ten styl istnieje w Twoim style.css lub dodaj go tutaj */
+    #campaigns-errors, #create-campaign-errors, #edit-campaign-errors,
+    #registration-errors, #login-errors, #add-funds-errors {
+        white-space: pre-wrap;
+    }
+</style>
+</head>
+<body>
+
+<h1>Welcome</h1>
+<p id="home-message"></p>
+
+<div id="public-section" class="section">
+    <h2>Register</h2>
+    <form id="registration-form">
+        <div>
+            <label for="reg-username">Username:</label>
+            <input type="text" id="reg-username" required>
+        </div>
+        <div>
+            <label for="reg-email">Email:</label>
+            <input type="email" id="reg-email" required>
+        </div>
+        <div>
+            <label for="reg-password">Password:</label>
+            <input type="password" id="reg-password" required>
+        </div>
+        <div>
+            <label for="reg-balance">Initial Balance:</label>
+            <input type="number" id="reg-balance" step="0.01" value="0.00" required>
+        </div>
+        <button type="submit">Register</button>
+        <p id="registration-feedback" style="color: green;"></p>
+        <p id="registration-errors" style="color: red; white-space: pre-wrap;"></p>
+    </form>
+
+    <h2>Login</h2>
+    <form id="login-form"> <div>
+        <label for="login-username">Username:</label>
+        <input type="text" id="login-username" required>
+    </div>
+        <div>
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" required>
+        </div>
+        <button type="button" id="login-button">Prepare Login</button>
+        <p id="login-feedback" style="color: blue;"></p>
+        <p id="login-errors" style="color: red;"></p>
+        <button type="button" id="test-auth-button" style="display: none;">Test Authentication</button>
+        <p id="auth-test-feedback" style="color: blue;"></p>
+    </form>
+
+    <h3>Available Cities (for reference)</h3>
+    <ul id="cities-list">
+    </ul>
+</div>
+
+<div id="authenticated-section" class="section">
+    <div id="authenticated-header" style="border-bottom: 1px solid #ccc; padding-bottom: 10px; margin-bottom: 15px; overflow: auto;">
+        <span style="float: left;">Logged in as: <strong id="seller-username-display"></strong> | Current Balance: $<strong id="seller-balance-display"></strong></span>
+        <button id="logout-button" style="float: right;">Logout</button>
+    </div>
+
+    <nav id="authenticated-nav">
+        <button class="nav-button" data-section="campaigns-list-section">Your Campaigns</button>
+        <button class="nav-button" data-section="create-campaign-section">Create Campaign</button>
+        <button class="nav-button" data-section="add-funds-section">Add Funds</button>
+    </nav>
+
+    <div id="authenticated-content">
+        <section id="campaigns-list-section" class="auth-section">
+            <h2>Your Campaigns</h2>
+            <div id="campaigns-list">
+                <p>Loading campaigns...</p>
+            </div>
+            <p id="campaigns-feedback" style="color: blue;"></p>
+            <p id="campaigns-errors" style="color: red; white-space: pre-wrap;"></p>
+        </section>
+
+        <section id="create-campaign-section" class="auth-section">
+            <h2>Create New Campaign</h2>
+            <form id="create-campaign-form">
+                <div>
+                    <label for="create-campaign-name">Campaign Name:</label>
+                    <input type="text" id="create-campaign-name" required>
+                </div>
+                <div>
+                    <label for="create-campaign-keywords">Keywords:</label>
+                    <input type="text" id="create-campaign-keywords">
+                    <div id="create-keyword-suggestions" class="suggestions-dropdown"></div>
+                    <div id="create-selected-keywords"></div>
+                    <input type="hidden" id="create-campaign-selected-keywords-input" required data-min-keywords="1">
+                </div>
+                <div>
+                    <label for="create-campaign-bid">Bid Amount (min $<span id="min-bid-display">1.00</span>):</label>
+                    <input type="number" id="create-campaign-bid" step="0.01" min="1.00" required>
+                </div>
+                <div>
+                    <label for="create-campaign-fund">Campaign Fund:</label>
+                    <input type="number" id="create-campaign-fund" step="0.01" min="0.01" required>
+                </div>
+                <div>
+                    <label for="create-campaign-status">Status:</label>
+                    <select id="create-campaign-status" required>
+                        <option value="true">On</option>
+                        <option value="false">Off</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="create-campaign-town">Town:</label>
+                    <select id="create-campaign-town" required>
+                    </select>
+                </div>
+                <div>
+                    <label for="create-campaign-radius">Radius (km):</label>
+                    <input type="number" id="create-campaign-radius" min="1" required>
+                </div>
+                <button type="submit">Create Campaign</button>
+            </form>
+            <p id="create-campaign-feedback" style="color: blue;"></p>
+            <p id="create-campaign-errors" style="color: red; white-space: pre-wrap;"></p>
+        </section>
+
+        <section id="add-funds-section" class="auth-section">
+            <h2>Add Funds</h2>
+            <form id="add-funds-form">
+                <div>
+                    <label for="add-funds-amount">Amount:</label>
+                    <input type="number" id="add-funds-amount" step="0.01" min="0.01" required>
+                </div>
+                <button type="submit">Add Funds</button>
+            </form>
+            <p id="add-funds-feedback" style="color: blue;"></p>
+            <p id="add-funds-errors" style="color: red;"></p>
+        </section>
+
+        <section id="edit-campaign-section" class="auth-section">
+            <h3>Edit Campaign <span id="edit-campaign-id-display"></span></h3>
+            <form id="edit-campaign-form">
+                <input type="hidden" id="edit-campaign-id">
+                <div>
+                    <label for="edit-campaign-name">Campaign Name:</label>
+                    <input type="text" id="edit-campaign-name" required>
+                </div>
+                <div>
+                    <label for="edit-campaign-keywords">Keywords:</label>
+                    <input type="text" id="edit-campaign-keywords">
+                    <div id="edit-keyword-suggestions" class="suggestions-dropdown"></div>
+                    <div id="edit-selected-keywords"></div>
+                    <input type="hidden" id="edit-campaign-selected-keywords-input" required data-min-keywords="1">
+                </div>
+                <div>
+                    <label for="edit-campaign-bid">Bid Amount (min $<span id="edit-min-bid-display">1.00</span>):</label>
+                    <input type="number" id="edit-campaign-bid" step="0.01" min="1.00" required>
+                </div>
+                <div>
+                    <label for="edit-campaign-fund">Campaign Fund:</label>
+                    <input type="number" id="edit-campaign-fund" step="0.01" min="0.01" required>
+                </div>
+                <div>
+                    <label for="edit-campaign-status">Status:</label>
+                    <select id="edit-campaign-status" required>
+                        <option value="true">On</option>
+                        <option value="false">Off</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="edit-campaign-town">Town:</label>
+                    <select id="edit-campaign-town" required>
+                    </select>
+                </div>
+                <div>
+                    <label for="edit-campaign-radius">Radius (km):</label>
+                    <input type="number" id="edit-campaign-radius" min="1" required>
+                </div>
+                <button type="submit">Save Changes</button>
+                <button type="button" id="cancel-edit-button">Cancel</button>
+            </form>
+            <p id="edit-campaign-feedback" style="color: blue;"></p>
+            <p id="edit-campaign-errors" style="color: red; white-space: pre-wrap;"></p>
+        </section>
+
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

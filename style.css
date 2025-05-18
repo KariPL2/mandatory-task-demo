@@ -1,0 +1,67 @@
+.section {
+    display: none; /* Domyślnie ukryj sekcje kontrolowane przez JS */
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#public-section {
+    display: block; /* Pokaż sekcję publiczną na początku */
+}
+
+.keyword-tag {
+    display: inline-block;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    padding: 2px 5px;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+}
+
+.remove-keyword {
+    margin-left: 5px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    font-weight: bold;
+}
+
+.suggestions-dropdown {
+    position: absolute; /* Umożliwia pozycjonowanie pod inputem */
+    z-index: 100; /* Upewnia się, że jest nad innymi elementami */
+    background-color: white;
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    width: calc(100% - 2px); /* Dopasuj szerokość do inputa */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    display: none; /* Domyślnie ukryte */
+}
+
+.suggestion-item {
+    padding: 8px 10px;
+    cursor: pointer;
+}
+
+.suggestion-item:hover {
+    background-color: #f0f0f0;
+}
+
+.campaign-item {
+    border: 1px solid #eee;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.campaign-item button, .campaign-item select {
+    margin-right: 5px;
+}
+
+#campaigns-errors, #create-campaign-errors, #edit-campaign-errors,
+#registration-errors, #login-errors, #add-funds-errors {
+    white-space: pre-wrap; /* Zachowaj formatowanie łamania wierszy dla błędów walidacji */
+}

@@ -58,14 +58,14 @@ public class CampaignService {
         Seller seller = sellerRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("Seller not found with username: " + username));
 
-        if(seller.getBalance() < campaignDTO.price()){
+        if(seller.getBalance() < campaignDTO.price()+campaignDTO.fund()){
             throw new RuntimeException("Insufficient balance for seller: " + username);
         }
         City city = cityRepository.findByName(campaignDTO.city())
                 .orElseThrow(() -> new RuntimeException("City not found with name: " + campaignDTO.city()));
         Set<Keyword> keywordEntities = keywordService.findKeywordsByNames(campaignDTO.keywordsNames());
-        seller.setBalance(seller.getBalance() - campaignDTO.price());
-
+        seller.setBalance(seller.getBalance() - (campaignDTO.price()+campaignDTO.fund()));
+        sellerRepository.flush();
         Campaign campaign = Campaign.builder()
                 .name(campaignDTO.name())
                 .price(campaignDTO.price())
@@ -77,10 +77,9 @@ public class CampaignService {
                 .build();
 
         for (Keyword keyword : keywordEntities) {
-            campaign.addKeyword(keyword); // Użyj metody pomocniczej z encji Campaign
+            campaign.addKeyword(keyword);
         }
 
-        //seller.getCampaigns().add(campaign);
         campaignRepository.save(campaign);
 
         return CampaignDTO.fromEntity(campaign);
@@ -117,84 +116,71 @@ public class CampaignService {
         Campaign existingCampaign = campaignRepository.findBySeller_UsernameAndId(username, id)
                 .orElseThrow(() -> new RuntimeException("Campaign not found or you are not authorized with id: " + id));
 
-        // === Walidacja i zarządzanie funduszami przy aktualizacji ===
         double oldFund = existingCampaign.getFund();
         double newFund = campaignDTO.fund();
         double fundDifference = newFund - oldFund;
 
-        // Znajdź sprzedawcę (encję zarządzaną w tej samej transakcji)
-        Seller seller = existingCampaign.getSeller(); // Seller jest już powiązany i zarządzany
+        Seller seller = sellerRepository.findById(existingCampaign.getSeller().getId())
+                .orElseThrow(() -> new RuntimeException("Seller not found even though linked to campaign ID: " + id));
+
 
         if (fundDifference > 0) {
-            // Zwiększanie funduszu - sprawdź saldo
             if (seller.getBalance() < fundDifference) {
                 throw new RuntimeException("Insufficient balance to increase campaign fund. Required: " + fundDifference + ", available: " + seller.getBalance());
             }
-            seller.setBalance(seller.getBalance() - fundDifference); // Odejmij różnicę
+            seller.setBalance(seller.getBalance() - fundDifference);
         } else if (fundDifference < 0) {
-            // Zmniejszanie funduszu - zwróć różnicę na konto sprzedawcy
-            seller.setBalance(seller.getBalance() + Math.abs(fundDifference)); // Dodaj różnicę (abs)
+            seller.setBalance(seller.getBalance() + Math.abs(fundDifference));
         }
-        // Zapis sprzedawcy nie jest jawnie potrzebny dzięki Transactional i zarządzanej encji
+        sellerRepository.save(seller);
+        sellerRepository.flush();
+
+        existingCampaign.setName(campaignDTO.name());
+        existingCampaign.setPrice(campaignDTO.price());
+        existingCampaign.setFund(newFund);
+        existingCampaign.setStatus(campaignDTO.status() != null ? campaignDTO.status() : existingCampaign.isStatus());
+        existingCampaign.setRadius(campaignDTO.radius());
 
 
-        // Znajdź encję miasta na podstawie nazwy z DTO, jeśli się zmieniła
-        City city = existingCampaign.getCity(); // Obecne miasto
+        City city = existingCampaign.getCity();
         if (!city.getName().equals(campaignDTO.city())) {
-            city = cityRepository.findByName(campaignDTO.city()) // Znajdź nowe miasto
+            city = cityRepository.findByName(campaignDTO.city())
                     .orElseThrow(() -> new RuntimeException("City not found with name: " + campaignDTO.city()));
-            existingCampaign.setCity(city); // Ustaw nowe miasto
+            existingCampaign.setCity(city);
         }
 
-        // Znajdź NOWE encje słów kluczowych na podstawie nazw z DTO
+
         Set<Keyword> newKeywordEntities = keywordService.findKeywordsByNames(campaignDTO.keywordsNames());
 
-        // --- Upewnij się, że znaleziono wszystkie NOWE słowa kluczowe (opcjonalnie) ---
         if (newKeywordEntities.size() != campaignDTO.keywordsNames().size()) {
-            // Logika jak przy tworzeniu - rzuć błąd jeśli jakieś słowo nie istnieje
             Set<String> foundNames = newKeywordEntities.stream().map(Keyword::getName).collect(Collectors.toSet());
             Set<String> notFoundNames = new HashSet<>(campaignDTO.keywordsNames());
             notFoundNames.removeAll(foundNames);
             throw new RuntimeException("Following new keywords not found: " + notFoundNames);
         }
-        // ---------------------------------------------------------------------
 
-
-        // === Zarządzanie relacją Many-to-Many (usuń stare, dodaj nowe) ===
-        Set<Keyword> keywordsToRemove = new HashSet<>(existingCampaign.getKeywords()); // Utwórz kopię obecnych słów
-        for (Keyword keyword : keywordsToRemove) {
-            existingCampaign.removeKeyword(keyword); // Użyj metody pomocniczej (usunie z Setu i z tabeli M2M)
+        Set<Keyword> currentKeywordsCopy = new HashSet<>(existingCampaign.getKeywords());
+        for (Keyword keyword : currentKeywordsCopy) {
+            existingCampaign.removeKeyword(keyword);
         }
         for (Keyword keyword : newKeywordEntities) {
-            existingCampaign.addKeyword(keyword); // Użyj metody pomocniczej (doda do Setu i do tabeli M2M)
+            existingCampaign.addKeyword(keyword);
         }
 
-
-        // === Zaktualizuj pozostałe pola kampanii z DTO ===
-        existingCampaign.setName(campaignDTO.name());
-        // Usunięto setKeyword
-        existingCampaign.setPrice(campaignDTO.price()); // Ustaw nową stawkę
-        existingCampaign.setFund(newFund); // Ustaw nowy budżet
-        existingCampaign.setStatus(campaignDTO.status() != null ? campaignDTO.status() : existingCampaign.isStatus()); // Ustaw status (obsługa null z DTO, zachowaj stary jeśli null)
-        existingCampaign.setRadius(campaignDTO.radius()); // Ustaw nowy promień
-
-        // Zapisz zaktualizowaną kampanię (JPA zarządzi relacją M2M i zmianami w sprzedawcy)
         Campaign updatedCampaignEntity = campaignRepository.save(existingCampaign);
 
-        // Zwróć DTO
         return CampaignDTO.fromEntity(updatedCampaignEntity);
     }
 
-    @Transactional // Powinna być transakcyjna
-    public CampaignDTO updateCampaignStatus(String username, long id, boolean status) { // <-- Upewnij się, że sygnatura jest POPRAWNA
-        // Metoda dla użytkownika - zmienia tylko status kampanii po ID
+    @Transactional
+    public CampaignDTO updateCampaignStatus(String username, long id, boolean status) {
         Campaign campaign = campaignRepository.findBySeller_UsernameAndId(username, id)
                 .orElseThrow(() -> new RuntimeException("Campaign not found or you are not authorized with id: " + id));
 
-        campaign.setStatus(status); // Ustaw status na wartość z parametru
+        campaign.setStatus(status);
 
         Campaign updatedCampaign = campaignRepository.save(campaign);
-        return CampaignDTO.fromEntity(updatedCampaign); // Mapowanie encji na DTO
+        return CampaignDTO.fromEntity(updatedCampaign);
     }
     @Transactional
     public void deleteCampaign(String username, long id) {
