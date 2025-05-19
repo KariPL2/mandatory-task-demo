@@ -14,10 +14,18 @@ public class City {
     @Column(nullable = false, unique = true)
     private String name;
 
+    @Column(nullable = false)
+    private double latitude;
+
+    @Column(nullable = false)
+    private double longitude;
+
     public City() {
     }
 
-    public City(String name) {
+    public City(String name, double latitude, double longitude) {
         this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 }

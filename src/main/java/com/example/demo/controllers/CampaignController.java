@@ -25,11 +25,6 @@ public class CampaignController {
         this.campaignService = campaignService;
     }
 
-    @GetMapping()
-    public List<CampaignDTO> getAllUserCampaigns(@AuthenticationPrincipal CustomUserDetails user){
-        return campaignService.findAllByUsername(user.getUsername());
-    }
-
     @GetMapping("/{campaignId}")
     public ResponseEntity<CampaignDTO> getUserCampaignById(@AuthenticationPrincipal CustomUserDetails user,
                                                            @PathVariable Long campaignId) {
@@ -37,10 +32,19 @@ public class CampaignController {
         return ResponseEntity.ok(campaign);
     }
 
-    @GetMapping("/by-city/{city}")
-    public ResponseEntity<List<CampaignDTO>> getAllUserCampaignsByCity(@AuthenticationPrincipal CustomUserDetails user,
-                                                                       @PathVariable String city){
-        List<CampaignDTO> campaigns = campaignService.findAllByUsernameAndCity(user.getUsername(), city);
+    @GetMapping
+    public ResponseEntity<List<CampaignDTO>> getCampaigns(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String name) {
+        List<CampaignDTO> campaigns;
+        if (city != null) {
+            campaigns = campaignService.findAllByUsernameAndCity(user.getUsername(), city);
+        } else if (name != null) {
+            campaigns = campaignService.findAllByUsernameAndName(user.getUsername(), name);
+        } else {
+            campaigns = campaignService.findAllByUsername(user.getUsername());
+        }
         return ResponseEntity.ok(campaigns);
     }
 
@@ -104,6 +108,22 @@ public class CampaignController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/search-by-location")
+    public ResponseEntity<List<CampaignDTO>> searchCampaignsByLocation(
+            @RequestParam String searchCityName,
+            @RequestParam double searchRadius) {
+        List<CampaignDTO> campaigns = campaignService.findActiveCampaignsNearSearchLocation(searchCityName, searchRadius);
+        return ResponseEntity.ok(campaigns);
+    }
+
+    @GetMapping("/search-by-location-and-keywords")
+    public ResponseEntity<List<CampaignDTO>> searchCampaignsByLocationAndKeywords(
+            @RequestParam String searchCityName,
+            @RequestParam double searchRadius,
+            @RequestParam List<String> keywords) {
+        List<CampaignDTO> campaigns = campaignService.findActiveCampaignsNearSearchLocationByKeywords(searchCityName, searchRadius, keywords);
+        return ResponseEntity.ok(campaigns);
+    }
 
 
 }

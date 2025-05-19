@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotNull;
 
 public record CityDTO(
         @NotNull Long id,
-        @NotBlank String name
+        @NotBlank String name,
+        double latitude,
+        double longitude
 ) {
     public static CityDTO fromEntity(City city) {
-        return new CityDTO(city.getId(), city.getName());
+        return new CityDTO(city.getId(), city.getName(), city.getLatitude(), city.getLongitude());
     }
 }
