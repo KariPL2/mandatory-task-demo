@@ -1,0 +1,52 @@
+/* src/pages/Form.css - Add styles for keywords */
+.selected-keywords {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.keyword-tag {
+    background-color: #e0e0e0;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    color: #333;
+}
+
+.keyword-tag button {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    margin-left: 0.5rem;
+    padding: 0;
+    font-size: 0.8rem;
+}
+
+.keyword-tag button:hover {
+    color: #f44336;
+}
+
+/* Style for Typeahead suggestions */
+.suggestions-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 150px;
+    overflow-y: auto;
+    background-color: #fff;
+}
+
+.suggestions-list li {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    color: #333; /* Ensure text is visible */
+}
+
+.suggestions-list li:hover {
+    background-color: #f0f0f0;
+}

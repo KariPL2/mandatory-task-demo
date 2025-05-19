@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - MandatoryDemoApplicationTests</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>MandatoryDemoApplicationTests</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/com.example.demo.html">com.example.demo</a> &gt; MandatoryDemoApplicationTests</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">1</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.473s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="tab-container">
+<ul class="tabLinks">
+<li>
+<a href="#">Tests</a>
+</li>
+<li>
+<a href="#">Standard output</a>
+</li>
+<li>
+<a href="#">Standard error</a>
+</li>
+</ul>
+<div class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">contextLoads()</td>
+<td class="success">0.473s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>14:55:44.924 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.example.demo.MandatoryDemoApplicationTests]: MandatoryDemoApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+14:55:45.011 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.example.demo.MandatoryDemoApplication for test class com.example.demo.MandatoryDemoApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2025-05-19T14:55:45.294+02:00  INFO 224664 --- [    Test worker] c.e.demo.MandatoryDemoApplicationTests   : Starting MandatoryDemoApplicationTests using Java 21.0.7 with PID 224664 (started by karol-bargiel in /home/karol-bargiel/Pulpit/mandatory-task-demo)
+2025-05-19T14:55:45.296+02:00  INFO 224664 --- [    Test worker] c.e.demo.MandatoryDemoApplicationTests   : No active profile set, falling back to 1 default profile: &quot;default&quot;
+2025-05-19T14:55:45.886+02:00  INFO 224664 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-05-19T14:55:45.937+02:00  INFO 224664 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 45 ms. Found 4 JPA repository interfaces.
+2025-05-19T14:55:46.333+02:00  INFO 224664 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-05-19T14:55:46.477+02:00  INFO 224664 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:testdb user=SA
+2025-05-19T14:55:46.479+02:00  INFO 224664 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-05-19T14:55:46.575+02:00  INFO 224664 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-05-19T14:55:46.610+02:00  INFO 224664 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2025-05-19T14:55:46.636+02:00  INFO 224664 --- [    Test worker] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-05-19T14:55:46.846+02:00  INFO 224664 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-05-19T14:55:46.892+02:00  WARN 224664 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: H2Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-05-19T14:55:46.907+02:00  INFO 224664 --- [    Test worker] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-05-19T14:55:47.635+02:00  INFO 224664 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+Hibernate: drop table if exists campaign cascade 
+Hibernate: drop table if exists campaign_keyword cascade 
+Hibernate: drop table if exists city cascade 
+Hibernate: drop table if exists keyword cascade 
+Hibernate: drop table if exists seller cascade 
+Hibernate: create table campaign (fund float(53) not null, price float(53) not null, radius float(53) not null, status boolean not null, city_id bigint not null, id bigint generated by default as identity, seller_id bigint not null, name varchar(255) not null unique, primary key (id))
+Hibernate: create table campaign_keyword (campaign_id bigint not null, keyword_id bigint not null, primary key (campaign_id, keyword_id))
+Hibernate: create table city (latitude float(53) not null, longitude float(53) not null, id bigint generated by default as identity, name varchar(255) not null unique, primary key (id))
+Hibernate: create table keyword (id bigint generated by default as identity, name varchar(255) not null unique, primary key (id))
+Hibernate: create table seller (balance float(53), id bigint generated by default as identity, email varchar(255) unique, password varchar(255) not null, role varchar(255) not null, username varchar(255) unique, primary key (id))
+Hibernate: alter table if exists campaign add constraint FKmd77wro8uqjwi4sk9b7cx34a5 foreign key (city_id) references city
+Hibernate: alter table if exists campaign add constraint FK33m3w7ci2a4v6dif0uslsrlht foreign key (seller_id) references seller
+Hibernate: alter table if exists campaign_keyword add constraint FKv6e1vq6phlw8qmgjudprppf5 foreign key (keyword_id) references keyword
+Hibernate: alter table if exists campaign_keyword add constraint FKrriuvmia825pgk9fuqcuaajyw foreign key (campaign_id) references campaign
+2025-05-19T14:55:47.667+02:00  INFO 224664 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-05-19T14:55:47.960+02:00  INFO 224664 --- [    Test worker] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-05-19T14:55:48.085+02:00  INFO 224664 --- [    Test worker] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name customUserDetailsService
+2025-05-19T14:55:48.142+02:00  INFO 224664 --- [    Test worker] o.s.b.a.w.s.WelcomePageHandlerMapping    : Adding welcome page: class path resource [static/index.html]
+2025-05-19T14:55:48.795+02:00  INFO 224664 --- [    Test worker] c.e.demo.MandatoryDemoApplicationTests   : Started MandatoryDemoApplicationTests in 3.683 seconds (process running for 4.564)
+Hibernate: select s1_0.id,s1_0.balance,c1_0.seller_id,c1_0.id,c1_0.city_id,c1_0.fund,c1_0.name,c1_0.price,c1_0.radius,c1_0.status,s1_0.email,s1_0.password,s1_0.role,s1_0.username from seller s1_0 left join campaign c1_0 on s1_0.id=c1_0.seller_id where s1_0.username=?
+Hibernate: insert into seller (balance,email,password,role,username,id) values (?,?,?,?,?,default)
+Hibernate: select count(*) from keyword k1_0
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: insert into keyword (name,id) values (?,default)
+Hibernate: select count(*) from city c1_0
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+Hibernate: insert into city (latitude,longitude,name,id) values (?,?,?,default)
+</pre>
+</span>
+</div>
+<div class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+WARNING: A Java agent has been loaded dynamically (/home/karol-bargiel/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.15.11/a38b16385e867f59a641330f0362ebe742788ed8/byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="https://www.gradle.org">Gradle 8.13</a> at 19 maj 2025, 14:55:49</p>
+</div>
+</div>
+</body>
+</html>

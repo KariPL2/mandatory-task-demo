@@ -1,0 +1,324 @@
+// src/components/CreateCampaignForm.jsx
+import React, { useState, useEffect, useContext, useCallback, useRef } from 'react'; // Import useRef
+import Typeahead from './Typeahead';
+import { AuthContext } from '../context/AuthContext';
+import '../pages/Form.css';
+
+// Removed debounce utility as we are trying a different approach
+
+
+function CreateCampaignForm({ onCampaignCreated, onCancel }) {
+    const { user } = useContext(AuthContext);
+    const [formData, setFormData] = useState({
+        name: '',
+        keywords: [],
+        bidAmount: 0.01,
+        campaignFund: 0.01,
+        status: true,
+        city: '',
+        radius: 1,
+    });
+    const [cities, setCities] = useState([]);
+    const [keywordSuggestions, setKeywordSuggestions] = useState([]);
+    const [loadingCities, setLoadingCities] = useState(true);
+    const [loadingKeywords, setLoadingKeywords] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+
+    const isHandlingSelection = useRef(false); // Use ref instead of state for selection
+    const isRemoving = useRef(false); // New ref to track if removal is in progress
+
+
+    const apiBaseUrl = 'http://localhost:8080';
+
+    useEffect(() => {
+        const fetchCities = async () => {
+            try {
+                const response = await fetch(`${apiBaseUrl}/cities`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch cities');
+                }
+                const data = await response.json();
+                setCities(data);
+                if (data.length > 0 && !formData.city) {
+                    setFormData(prev => ({ ...prev, city: data[0].name }));
+                }
+            } catch (err) {
+                console.error('Error fetching cities:', err);
+            } finally {
+                setLoadingCities(false);
+            }
+        };
+        fetchCities();
+    }, []);
+
+    const fetchKeywordSuggestions = async (query) => {
+        if (query.length < 2) {
+            setKeywordSuggestions([]);
+            return;
+        }
+        setLoadingKeywords(true);
+        try {
+            const response = await fetch(`${apiBaseUrl}/keywords/suggest?q=${encodeURIComponent(query)}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch keyword suggestions');
+            }
+            const data = await response.json();
+            setKeywordSuggestions(data);
+        } catch (err) {
+            console.error('Error fetching keyword suggestions:', err);
+            setKeywordSuggestions([]);
+        } finally {
+            setLoadingKeywords(false);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const handleKeywordSelect = (keyword) => {
+        console.log("Form: Selected keyword received:", keyword);
+        console.log("Form: Current keywords before update:", formData.keywords);
+
+        if (!formData.keywords.includes(keyword)) {
+            isHandlingSelection.current = true; // Set ref when starting selection
+
+            const updatedKeywords = [...formData.keywords, keyword];
+            console.log("Form: New keywords array to set:", updatedKeywords);
+
+            setFormData(prev => ({
+                ...prev,
+                keywords: updatedKeywords
+            }));
+
+            // Reset ref after a short delay
+            setTimeout(() => {
+                isHandlingSelection.current = false;
+            }, 300);
+
+        } else {
+            console.log("Form: Keyword already exists:", keyword);
+        }
+        setKeywordSuggestions([]);
+    };
+
+    // Use useCallback to memoize the remove handler
+    const handleRemoveKeyword = useCallback((keywordToRemove) => {
+        // Check if removal is already in progress
+        if (isRemoving.current) {
+            console.log("Form: Ignoring remove call, removal already in progress.");
+            return;
+        }
+
+        // Ignore remove calls if a selection is currently being handled (keep this too)
+        if (isHandlingSelection.current) {
+            console.log("Form: Ignoring remove call during selection handling.");
+            return;
+        }
+
+        console.log("Form: Removing keyword:", keywordToRemove);
+
+        isRemoving.current = true; // Set ref at the start of removal process
+
+        setFormData(prev => {
+            const updatedKeywords = prev.keywords.filter(keyword => keyword !== keywordToRemove);
+            console.log("Form: Keywords after removal:", updatedKeywords);
+
+            // Reset removal flag after state update (or a short delay if needed)
+            // Using a timeout might be safer given the strange behavior
+            setTimeout(() => {
+                isRemoving.current = false;
+                console.log("Form: Removal process flagged as complete.");
+            }, 50); // Small delay
+
+            return {
+                ...prev,
+                keywords: updatedKeywords
+            };
+        });
+
+        // If not using timeout inside setFormData, reset here after the call
+        // isRemoving.current = false; // This might be too soon if state update is slow
+
+    }, []); // Dependencies: setFormData is stable, no other external dependencies
+
+    // Make sure the onClick uses the useCallback version
+    const handleRemoveButtonClick = useCallback((event, keywordToRemove) => {
+        event.stopPropagation(); // Stop propagation from the button click
+        handleRemoveKeyword(keywordToRemove); // Call the memoized handler
+    }, [handleRemoveKeyword]); // Dependency: handleRemoveKeyword memoized function
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError(null);
+        setIsLoading(true);
+
+        if (formData.keywords.length === 0) {
+            setError("Proszę wybrać co najmniej jedno słowo kluczowe.");
+            setIsLoading(false);
+            return;
+        }
+        const bidAmount = parseFloat(formData.bidAmount);
+        const campaignFund = parseFloat(formData.campaignFund);
+        if (isNaN(bidAmount) || bidAmount <= 0) {
+            setError("Stawka musi być dodatnią liczbą.");
+            setIsLoading(false);
+            return;
+        }
+        if (isNaN(campaignFund) || campaignFund <= 0) {
+            setError("Budżet kampanii musi być dodatnią liczbą.");
+            setIsLoading(false);
+            return;
+        }
+
+
+        try {
+            const response = await fetch(`${apiBaseUrl}/campaigns`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Basic ${btoa(user.username + ':' + user.password)}`
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    keywordsNames: formData.keywords,
+                    price: bidAmount,
+                    fund: campaignFund,
+                    status: formData.status,
+                    city: formData.city,
+                    radius: parseInt(formData.radius, 10),
+                }),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Create Campaign API Error:", response.status, errorData);
+                throw new Error(errorData.message || 'Failed to create campaign');
+            }
+
+            const createdCampaign = await response.json();
+            alert('Kampania utworzona pomyślnie!');
+            if (onCampaignCreated) {
+                onCampaignCreated(createdCampaign);
+            }
+
+        } catch (err) {
+            setError(err.message);
+            console.error('Error creating campaign:', err);
+            alert('Błąd podczas tworzenia kampanii: ' + err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="form-container">
+            <h2>Utwórz Nową Kampanię</h2>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <label>
+                Nazwa Kampanii:
+                <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                />
+            </label>
+            <label>
+                Słowa Kluczowe:
+                <div className="selected-keywords">
+                    {formData.keywords.map(keyword => (
+                        <span key={keyword} className="keyword-tag">
+                            {keyword}
+                            <button
+                                type="button"
+                                // Use the memoized click handler
+                                onClick={(event) => handleRemoveButtonClick(event, keyword)}
+                            >
+                                x
+                            </button>
+                        </span>
+                    ))}
+                </div>
+                <Typeahead
+                    onInputChange={fetchKeywordSuggestions}
+                    suggestions={keywordSuggestions}
+                    onSelect={handleKeywordSelect}
+                    placeholder="Wpisz słowa kluczowe"
+                />
+                {loadingKeywords && <p>Ładowanie sugestii...</p>}
+            </label>
+            <label>
+                Stawka (Bid Amount):
+                <input
+                    type="number"
+                    name="bidAmount"
+                    step="0.01"
+                    value={formData.bidAmount}
+                    onChange={handleInputChange}
+                    required
+                    min="0.01"
+                />
+            </label>
+            <label>
+                Budżet Kampanii (Campaign Fund):
+                <input
+                    type="number"
+                    name="campaignFund"
+                    step="0.01"
+                    value={formData.campaignFund}
+                    onChange={handleInputChange}
+                    required
+                    min="0.01"
+                />
+            </label>
+            <label>
+                Status:
+                <input
+                    type="checkbox"
+                    name="status"
+                    checked={formData.status}
+                    onChange={handleInputChange}
+                /> Aktywna
+            </label>
+            <label>
+                Miasto:
+                {loadingCities ? (
+                    <p>Ładowanie miast...</p>
+                ) : (
+                    <select name="city" value={formData.city} onChange={handleInputChange} required>
+                        <option value="">-- Wybierz Miasto --</option>
+                        {cities.map(city => (
+                            <option key={city.id} value={city.name}>{city.name}</option>
+                        ))}
+                    </select>
+                )}
+            </label>
+            <label>
+                Promień (km):
+                <input
+                    type="number"
+                    name="radius"
+                    value={formData.radius}
+                    onChange={handleInputChange}
+                    required
+                    min="0"
+                />
+            </label>
+
+            <button type="submit" disabled={isLoading}>
+                {isLoading ? 'Tworzenie...' : 'Utwórz Kampanię'}
+            </button>
+            <button type="button" onClick={onCancel} style={{ backgroundColor: '#6c757d', marginTop: '0.5rem' }} disabled={isLoading}>Anuluj</button>
+        </form>
+    );
+}
+
+export default CreateCampaignForm;

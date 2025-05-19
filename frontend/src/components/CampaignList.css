@@ -1,0 +1,42 @@
+/* src/components/CampaignList.css */
+.campaign-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.campaign-item {
+    border: 1px solid #ddd;
+    padding: 1rem;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333; /* Ensure text is visible on white background */
+}
+
+.campaign-item h3 {
+    margin-top: 0;
+    color: #555;
+}
+
+.campaign-actions {
+    margin-top: 1rem;
+}
+
+.campaign-actions button {
+    margin-right: 0.5rem;
+    color: white;
+    border: none;
+}
+
+/* Optional: Style for edit form within the list item */
+.campaign-item .form-container {
+    padding: 1rem;
+    border: none; /* Remove border if embedded */
+    background: none; /* Remove background if embedded */
+}
+
+.campaign-item .form-container button {
+    color: white;
+    border: none;
+}

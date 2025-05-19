@@ -8,3 +8,30 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+# Ignoruj folder z zależnościami Node.js w folderze frontendu
+/frontend/node_modules/
+
+# Ignoruj folder z zbudowanymi plikami frontendu
+/frontend/build/
+/frontend/dist/ # Jeśli używasz Vite lub innego bundlera, który tworzy folder 'dist'
+
+# Typowe foldery i pliki generowane przez Maven/Gradle w backendzie
+/backend/target/
+/backend/build/ # Jeśli używasz Gradle
+/backend/.gradle/
+/backend/out/   # Czasem używane przez IDE
+
+# Typowe pliki konfiguracyjne IDE (np. IntelliJ IDEA)
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/ # Jeśli używasz VS Code
+
+# Pliki logów
+*.log
+logs/
+
+# Pliki tymczasowe systemu operacyjnego
+.DS_Store
+Thumbs.db

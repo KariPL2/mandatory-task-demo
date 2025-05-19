@@ -1,15 +1,17 @@
+// Dodaj wtyczkę Node.js na początku pliku build.gradle
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.4.5'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.boot' version '3.4.5' // Zachowaj Twoją wersję Spring Boot
+	id 'io.spring.dependency-management' version '1.1.7' // Zachowaj Twoją wersję dependency-management
+	id "com.github.node-gradle.node" version "3.1.1" // Wtyczka Node.js do uruchamiania komend npm/yarn
 }
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+group = 'com.example' // Twoja grupa
+version = '0.0.1-SNAPSHOT' // Twoja wersja
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(21) // Zachowaj Twoją wersję Javy
 	}
 }
 
@@ -24,6 +26,7 @@ repositories {
 }
 
 dependencies {
+	// Twoje istniejące zależności backendowe
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation:3.4.5'
@@ -39,6 +42,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
@@ -46,3 +50,49 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+// Konfiguracja wtyczki Node.js
+node {
+	// Upewnij się, że wersja Node.js jest zgodna z Twoim projektem frontendowym
+	version = '18.17.1' // Wersja Node.js do pobrania przez Gradle
+	download = true // Gradle pobierze Node.js jeśli nie jest zainstalowany
+}
+
+// Zadanie Gradle do uruchomienia 'npm run build' w folderze frontendu
+task npmBuild(type: com.github.gradle.node.npm.task.NpmTask) {
+	// Ścieżka do folderu frontendu - jest bezpośrednio w głównym katalogu
+	workingDir = file("${project.rootDir}/frontend") // project.rootDir to główny katalog
+	args = ['run', 'build'] // Komenda do budowania frontendu (dla Vite to 'build', dla CRA to 'build')
+	// Dodaj to, aby zadanie było zawsze wykonywane (nie cache'owane)
+	outputs.upToDateWhen { false }
+}
+
+// Zadanie Gradle do skopiowania zbudowanych plików frontendu
+task copyFrontendBuild(type: Copy) {
+	// To zadanie zależy od pomyślnego zakończenia zadania npmBuild
+	dependsOn npmBuild
+
+	// Ścieżka do folderu ze zbudowanym frontendem (build lub dist)
+	// Upewnij się, że ścieżka jest poprawna w zależności od bundlera (CRA -> build, Vite -> dist)
+	// Folder 'frontend' jest w głównym katalogu, a 'dist' w folderze 'frontend'
+	from "${project.rootDir}/frontend/dist" // Zmień 'dist' na 'build' jeśli używasz CRA
+
+	// Docelowy folder w projekcie backendowym, z którego Spring Boot serwuje statyczne pliki
+	// W tej strukturze projektu, folder build/resources/main/static jest w głównym katalogu build
+	into "${project.buildDir}/resources/main/static"
+}
+
+// Upewnij się, że zadanie 'processResources' (które kopiuje zasoby do folderu build)
+// zależy od zadania kopiowania frontendu. Gwarantuje to, że frontend zostanie
+// zbudowany i skopiowany przed spakowaniem aplikacji.
+processResources.dependsOn copyFrontendBuild
+
+// Opcjonalnie: Upewnij się, że zadanie 'clean' usuwa również zbudowany frontend
+clean {
+	// Usuń folder zbudowanego frontendu w folderze frontendu
+	delete file("${project.rootDir}/frontend/dist") // Zmień 'dist' na 'build' jeśli używasz CRA
+	// Usuń skopiowane pliki frontendu z folderu statycznego backendu
+	delete file("${project.buildDir}/resources/main/static")
+}
+
+// ... reszta Twojego pliku build.gradle (jeśli coś jeszcze było poniżej) ...
