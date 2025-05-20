@@ -1,5 +1,4 @@
-// src/components/CampaignList.jsx
-import React, { useState, useCallback } from 'react'; // Import useCallback
+import React, { useState, useCallback } from 'react';
 import EditCampaignForm from './EditCampaignForm';
 import './CampaignList.css';
 
@@ -74,24 +73,13 @@ function CampaignList({ campaigns, isUserCampaigns, onCampaignUpdated, onCampaig
         }
     };
 
-    // This useCallback definition was causing the error because useCallback wasn't imported
-    // It seems this specific handler is not actually used in CampaignList's JSX currently,
-    // as the remove button is rendered within the form components.
-    // Keeping the definition here in case it's needed elsewhere or in future updates.
     const handleRemoveKeyword = useCallback((keywordToRemove) => {
         console.log("CampaignList: Remove button clicked for:", keywordToRemove);
-        // The actual state update happens in the parent (form component)
     }, []);
 
-
-    // This useCallback definition was also causing the error
-    // Similarly, this handler is likely not used in CampaignList's JSX
     const handleRemoveButtonClick = useCallback((event, keywordToRemove) => {
         console.log("CampaignList: Remove button handler triggered for:", keywordToRemove);
         event.stopPropagation();
-        // This would call a prop like onRemoveKeyword(keywordToRemove)
-        // passed down from the form component if the button was rendered here.
-        // Since the button is in the form, this handler is not used in CampaignList currently.
     }, []);
 
 
@@ -115,17 +103,13 @@ function CampaignList({ campaigns, isUserCampaigns, onCampaignUpdated, onCampaig
                     ) : (
                         <>
                             <h3>{campaign.name}</h3>
-                            {/* Use 'sellerName' from backend response */}
                             <p><strong>Sprzedawca:</strong> {campaign.sellerName}</p>
-                            {/* Use 'keywordsNames' from backend response */}
                             <p><strong>Słowa kluczowe:</strong> {campaign.keywordsNames ? campaign.keywordsNames.join(', ') : 'Brak'}</p>
-                            {/* Use 'fund' from backend response and add safety check */}
                             <p><strong>Budżet:</strong> {campaign.fund !== undefined && campaign.fund !== null ? campaign.fund.toFixed(2) : 'N/A'} PLN</p>
-                            {/* Use 'price' from backend response and add safety check */}
                             <p><strong>Stawka:</strong> {campaign.price !== undefined && campaign.price !== null ? campaign.price.toFixed(2) : 'N/A'} PLN</p>
                             <p><strong>Status:</strong> {campaign.status ? 'Aktywna' : 'Nieaktywna'}</p>
-                            {/* Use 'city' and 'radius' from backend response and add safety check for radius*/}
-                            <p><strong>Lokalizacja:</strong> {campaign.city}, Promień: {campaign.radius !== undefined && campaign.radius !== null ? campaign.radius : 'N/A'} km</p>
+                            {/* USUNIĘTO ODWOLANIE DO 'radius' */}
+                            <p><strong>Lokalizacja:</strong> {campaign.city}</p>
 
 
                             {isUserCampaigns && (
@@ -134,7 +118,6 @@ function CampaignList({ campaigns, isUserCampaigns, onCampaignUpdated, onCampaig
                                         Zmień Status na {campaign.status ? 'Nieaktywna' : 'Aktywna'}
                                     </button>
                                     <button onClick={() => handleEditClick(campaign)} style={{ backgroundColor: '#2196f3', marginLeft: '0.5rem' }}>Edytuj</button>
-                                    {/* The delete button calls handleDelete directly */}
                                     <button onClick={() => handleDelete(campaign.id)} style={{ backgroundColor: '#f44336', marginLeft: '0.5rem' }}>Usuń</button>
                                 </div>
                             )}

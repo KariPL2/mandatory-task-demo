@@ -1,5 +1,5 @@
 // src/components/EditCampaignForm.jsx
-import React, { useState, useEffect, useContext, useCallback, useRef } from 'react'; // Import useRef
+import React, { useState, useEffect, useContext, useCallback, useRef } from 'react';
 import Typeahead from './Typeahead';
 import { AuthContext } from '../context/AuthContext';
 import '../pages/Form.css';
@@ -13,7 +13,8 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
         campaignFund: campaign.campaignFund,
         status: campaign.status,
         city: campaign.city,
-        radius: campaign.radius,
+        // USUNIĘTO:
+        // radius: campaign.radius,
     });
     const [cities, setCities] = useState([]);
     const [keywordSuggestions, setKeywordSuggestions] = useState([]);
@@ -22,8 +23,8 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const isHandlingSelection = useRef(false); // Use ref
-    const isRemoving = useRef(false); // New ref
+    const isHandlingSelection = useRef(false);
+    const isRemoving = useRef(false);
 
 
     const apiBaseUrl = 'http://localhost:8080';
@@ -100,7 +101,6 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
         setKeywordSuggestions([]);
     };
 
-    // Use useCallback to memoize the remove handler
     const handleRemoveKeyword = useCallback((keywordToRemove) => {
         if (isRemoving.current) {
             console.log("Form: Ignoring remove call, removal already in progress.");
@@ -123,7 +123,7 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
             setTimeout(() => {
                 isRemoving.current = false;
                 console.log("Form: Removal process flagged as complete.");
-            }, 50); // Small delay
+            }, 50);
 
             return {
                 ...prev,
@@ -131,14 +131,13 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
             };
         });
 
-    }, []); // Dependencies: setFormData is stable, no other external dependencies
+    }, []);
 
 
-    // Make sure the onClick uses the useCallback version
     const handleRemoveButtonClick = useCallback((event, keywordToRemove) => {
-        event.stopPropagation(); // Stop propagation from the button click
-        handleRemoveKeyword(keywordToRemove); // Call the memoized handler
-    }, [handleRemoveKeyword]); // Dependency: handleRemoveKeyword memoized function
+        event.stopPropagation();
+        handleRemoveKeyword(keywordToRemove);
+    }, [handleRemoveKeyword]);
 
 
     const handleSubmit = async (e) => {
@@ -179,7 +178,8 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                     fund: campaignFund,
                     status: formData.status,
                     city: formData.city,
-                    radius: parseInt(formData.radius, 10),
+                    // USUNIĘTO:
+                    // radius: parseInt(formData.radius, 10),
                 }),
             });
 
@@ -226,7 +226,6 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                             {keyword}
                             <button
                                 type="button"
-                                // Use the memoized click handler
                                 onClick={(event) => handleRemoveButtonClick(event, keyword)}
                             >
                                 x
@@ -288,6 +287,7 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                     </select>
                 )}
             </label>
+            {/* USUNIĘTO CAŁY BLOK LABEL DLA PROMIENIA:
             <label>
                 Promień (km):
                 <input
@@ -299,6 +299,7 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                     min="0"
                 />
             </label>
+            */}
 
             <button type="submit" disabled={isLoading}>
                 {isLoading ? 'Zapisywanie...' : 'Zapisz Zmiany'}

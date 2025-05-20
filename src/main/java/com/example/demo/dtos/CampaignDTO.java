@@ -16,7 +16,6 @@ public record CampaignDTO(
         double fund,
         boolean status,
         String city,
-        double radius,
         String sellerName) {
 
     public static CampaignDTO fromEntity(Campaign campaign){
@@ -28,7 +27,6 @@ public record CampaignDTO(
                 campaign.getFund(),
                 campaign.isStatus(),
                 campaign.getCity().getName(),
-                campaign.getRadius(),
                 campaign.getSeller().getUsername()
         );
     }

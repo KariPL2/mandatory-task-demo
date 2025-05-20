@@ -12,7 +12,6 @@ public record CreateCampaignDTO(
         @NotNull Double price,
         @NotNull Double fund,
         Boolean status,
-        @NotBlank String city,
-        @NotNull Double radius
+        @NotBlank String city
 ) {
 }

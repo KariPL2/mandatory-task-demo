@@ -45,9 +45,6 @@ public class Campaign {
     @JoinColumn(name = "city_id", nullable = false)
     private City city;
 
-    @Column(nullable = false)
-    private double radius;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
     private Seller seller;

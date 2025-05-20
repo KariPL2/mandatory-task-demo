@@ -9,18 +9,16 @@ function SearchCampaigns({ onSearch }) {
         type: 'all', // 'all', 'name', 'city', 'location', 'location_keywords'
         value: '', // for name or city search
         searchCityName: '', // for location search
-        searchRadius: 1, // for location search - set default min
+        searchRadius: 1, // for location search - UWAGA: TO POLE ZOSTAJE!
         keywords: [], // for location_keywords search
     });
     const [keywordSuggestions, setKeywordSuggestions] = useState([]);
     const [loadingKeywords, setLoadingKeywords] = useState(false);
     const [searchResults, setSearchResults] = useState([]);
-    const [isLoading, setIsLoading] = useState(false); // Declare isLoading state for search
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    // New ref to prevent accidental removal clicks after selection
     const isHandlingSelection = useRef(false);
-
 
     const apiBaseUrl = 'http://localhost:8080';
 
@@ -44,7 +42,6 @@ function SearchCampaigns({ onSearch }) {
         }));
     };
 
-    // Fetch keyword suggestions (reused logic from Create/Edit forms)
     const fetchKeywordSuggestions = async (query) => {
         if (query.length < 2) {
             setKeywordSuggestions([]);

@@ -84,7 +84,6 @@ public class CampaignService {
                 .fund(campaignDTO.fund())
                 .status(campaignDTO.status())
                 .city(city)
-                .radius(campaignDTO.radius())
                 .seller(seller)
                 .build();
 
@@ -164,7 +163,6 @@ public class CampaignService {
         existingCampaign.setPrice(campaignDTO.price());
         existingCampaign.setFund(newFund);
         existingCampaign.setStatus(campaignDTO.status() != null ? campaignDTO.status() : existingCampaign.isStatus());
-        existingCampaign.setRadius(campaignDTO.radius());
 
         if (!existingCampaign.getCity().getName().equals(campaignDTO.city())) {
             City city = cityRepository.findByName(campaignDTO.city())
