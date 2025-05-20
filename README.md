@@ -76,6 +76,8 @@ Komunikacja między frontendem a backendem odbywa się poprzez RESTful API. Uwie
 
 ---
 
+---
+
 ## Instalacja i Uruchomienie
 
 ### Wymagania
@@ -83,38 +85,37 @@ Upewnij się, że masz zainstalowane:
 - **Java Development Kit (JDK) 21**
 - **Node.js 18.x lub nowszy**
 
-### Backend (Spring Boot)
+### Kroki instalacji i uruchomienia
+
 1.  **Sklonuj repozytorium**:
+    Otwórz terminal i sklonuj projekt. Następnie przejdź do głównego katalogu projektu (`my-campaigns`):
     ```bash
-    git clone git@github.com:KariPL2/mandatory-task-demo.git
-    cd my-campaigns/backend
+    git clone [LINK_DO_TWOJEGO_REPOZYTORIUM]
+    cd my-campaigns
     ```
-2.  **Zbuduj projekt**:
+2.  **Zbuduj Frontend**:
+    Przejdź do katalogu `frontend`, zainstaluj zależności i zbuduj projekt. To wygeneruje statyczne pliki frontendu, które zostaną później spakowane razem z backendem.
     ```bash
+    cd frontend
+    npm install
+    npm run build
+    cd .. # Wróć do głównego katalogu projektu (my-campaigns)
+    ```
+3.  **Zbuduj Backend**:
+    Przejdź do katalogu `backend` i zbuduj aplikację Spring Boot. Podczas tego procesu, zbudowane pliki frontendu zostaną automatycznie skopiowane do zasobów backendu.
+    ```bash
+    cd backend
     ./gradlew build
     ```
-    Ten krok stworzy plik `.jar` w katalogu `build/libs`.
-3.  **Uruchom aplikację**:
+    Ten krok stworzy wykonywalny plik `.jar` (np. `demo-0.0.1-SNAPSHOT.jar`) w katalogu `build/libs`.
+4.  **Uruchom aplikację**:
+    Po pomyślnym zbudowaniu obu części, uruchom aplikację Spring Boot. Spakowana aplikacja serwuje zarówno funkcjonalność backendową, jak i statyczne pliki frontendu.
     ```bash
     java -jar build/libs/demo-0.0.1-SNAPSHOT.jar
     ```
-    Aplikacja backendowa będzie dostępna pod adresem **`http://localhost:8080`**.
+    Cała aplikacja (backend i frontend) będzie dostępna pod adresem **`http://localhost:8080`**. Otwórz przeglądarkę i przejdź pod ten adres, aby korzystać z platformy.
 
-### Frontend (React)
-1.  **Przejdź do katalogu frontendowego**:
-    ```bash
-    cd ../frontend
-    ```
-2.  **Zainstaluj zależności**:
-    ```bash
-    npm install
-    ```
-3.  **Uruchom aplikację deweloperską**:
-    ```bash
-    npm run dev
-    ```
-    Aplikacja frontendowa będzie dostępna zazwyczaj pod adresem **`http://localhost:5173`** (lub innym wskazanym przez Vite).
-
+---
 ## API Endpoints
 
 Poniżej przedstawiono kluczowe endpointy API dostępne w aplikacji wraz z przykładami użycia i wymaganymi parametrami. Bazowy URL dla wszystkich endpointów to `http://localhost:8080`.
