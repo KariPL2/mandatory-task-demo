@@ -120,7 +120,7 @@ Poniżej przedstawiono kluczowe endpointy API dostępne w aplikacji wraz z przyk
                 "id": "uuid-kampanii-1",
                 "name": "Kampania testowa A",
                 "keywords": ["telewizory", "elektronika"],
-                "bidAmount": 0.50,
+                "price": 0.50,
                 "fund": 50.00,
                 "status": "ACTIVE",
                 "city": "Warszawa",
@@ -137,7 +137,7 @@ Poniżej przedstawiono kluczowe endpointy API dostępne w aplikacji wraz z przyk
         {
             "name": "Nowa Kampania",
             "keywords": ["buty", "sportowe"],
-            "bidAmount": 0.30,
+            "price": 0.30,
             "fund": 100.00,
             "status": "ACTIVE",
             "city": "Kraków"
