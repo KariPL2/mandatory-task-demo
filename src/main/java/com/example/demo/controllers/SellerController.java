@@ -55,7 +55,7 @@ public class SellerController {
         return ResponseEntity.ok(seller);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")//do poprawki
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/{sellerId}")
     public ResponseEntity<Void> deleteSellerById(@PathVariable Long sellerId) {
         sellerService.deleteById(sellerId);

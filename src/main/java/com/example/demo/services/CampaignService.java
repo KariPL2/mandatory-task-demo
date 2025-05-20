@@ -237,7 +237,7 @@ public class CampaignService {
         City searchCity = cityRepository.findByName(searchCityName)
                 .orElseThrow(() -> new NotFoundException("Search city not found: " + searchCityName));
 
-        List<Campaign> campaigns = campaignRepository.findActiveCampaignsNearSearchLocation( // Użycie poprawionej metody repozytorium
+        List<Campaign> campaigns = campaignRepository.findActiveCampaignsNearSearchLocation(
                 searchCity.getLatitude(),
                 searchCity.getLongitude(),
                 searchRadius // Przekazanie searchRadius
@@ -248,7 +248,6 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
-    // Opcjonalnie, metoda wyszukiwania z uwzględnieniem słów kluczowych
     @Transactional
     public List<CampaignDTO> findActiveCampaignsNearSearchLocationByKeywords(String searchCityName, double searchRadius, List<String> keywords) {
         City searchCity = cityRepository.findByName(searchCityName)
