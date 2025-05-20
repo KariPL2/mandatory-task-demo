@@ -48,7 +48,7 @@ Główne cele projektu to:
 
 ### Backend:
 - **Java 21**
-- **Spring Boot 3.4.x**
+- **Spring Boot 3.4.5**
 - **Spring Data JPA**: Do interakcji z bazą danych.
 - **Hibernate**: Implementacja JPA.
 - **Gradle**: Zarządzanie zależnościami i budowaniem projektu.
@@ -73,6 +73,47 @@ Aplikacja jest zbudowana w architekturze klient-serwer.
 - **Backend** (Spring Boot) odpowiada za logikę biznesową, persystencję danych (H2 Database) i wystawianie RESTful API.
 
 Komunikacja między frontendem a backendem odbywa się poprzez RESTful API. Uwierzytelnianie użytkowników realizowane jest za pomocą Basic Authentication.
+
+---
+
+## Instalacja i Uruchomienie
+
+### Wymagania
+Upewnij się, że masz zainstalowane:
+- **Java Development Kit (JDK) 21**
+- **Node.js 18.x lub nowszy**
+
+### Backend (Spring Boot)
+1.  **Sklonuj repozytorium**:
+    ```bash
+    git clone [LINK_DO_TWOJEGO_REPOZYTORIUM]
+    cd my-campaigns/backend
+    ```
+2.  **Zbuduj projekt**:
+    ```bash
+    ./gradlew build
+    ```
+    Ten krok stworzy plik `.jar` w katalogu `build/libs`.
+3.  **Uruchom aplikację**:
+    ```bash
+    java -jar build/libs/demo-0.0.1-SNAPSHOT.jar
+    ```
+    Aplikacja backendowa będzie dostępna pod adresem **`http://localhost:8080`**.
+
+### Frontend (React)
+1.  **Przejdź do katalogu frontendowego**:
+    ```bash
+    cd ../frontend
+    ```
+2.  **Zainstaluj zależności**:
+    ```bash
+    npm install
+    ```
+3.  **Uruchom aplikację deweloperską**:
+    ```bash
+    npm run dev
+    ```
+    Aplikacja frontendowa będzie dostępna zazwyczaj pod adresem **`http://localhost:5173`** (lub innym wskazanym przez Vite).
 
 ## API Endpoints
 
@@ -155,7 +196,6 @@ Poniżej przedstawiono kluczowe endpointy API dostępne w aplikacji wraz z przyk
             "id": "uuid-kampanii-do-edycji",
             "name": "Zaktualizowana Kampania",
             "keywords": ["obuwie", "damskie"],
-            "price": 0.35,
             "fund": 75.00,
             "status": "PAUSED",
             "city": "Wrocław"
