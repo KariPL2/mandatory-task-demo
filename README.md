@@ -86,7 +86,7 @@ Upewnij się, że masz zainstalowane:
 ### Backend (Spring Boot)
 1.  **Sklonuj repozytorium**:
     ```bash
-    git clone [LINK_DO_TWOJEGO_REPOZYTORIUM]
+    git clone git@github.com:KariPL2/mandatory-task-demo.git
     cd my-campaigns/backend
     ```
 2.  **Zbuduj projekt**:
