@@ -90,7 +90,7 @@ Upewnij się, że masz zainstalowane:
 1.  **Sklonuj repozytorium**:
     Otwórz terminal i sklonuj projekt. Następnie przejdź do głównego katalogu projektu (`my-campaigns`):
     ```bash
-    git clone [LINK_DO_TWOJEGO_REPOZYTORIUM]
+    git clone git@github.com:KariPL2/mandatory-task-demo.git
     cd my-campaigns
     ```
 2.  **Zbuduj Frontend**:
