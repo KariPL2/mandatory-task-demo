@@ -88,10 +88,10 @@ Upewnij się, że masz zainstalowane:
 ### Kroki instalacji i uruchomienia
 
 1.  **Sklonuj repozytorium**:
-    Otwórz terminal i sklonuj projekt. Następnie przejdź do głównego katalogu projektu (`my-campaigns`):
+    Otwórz terminal i sklonuj projekt. Następnie przejdź do głównego katalogu projektu (`mandatory-task-demo`):
     ```bash
     git clone git@github.com:KariPL2/mandatory-task-demo.git
-    cd my-campaigns
+    cd mandatory-task-demo
     ```
 2.  **Zbuduj Frontend**:
     Przejdź do katalogu `frontend`, zainstaluj zależności i zbuduj projekt. To wygeneruje statyczne pliki frontendu, które zostaną później spakowane razem z backendem.
@@ -99,12 +99,11 @@ Upewnij się, że masz zainstalowane:
     cd frontend
     npm install
     npm run build
-    cd .. # Wróć do głównego katalogu projektu (my-campaigns)
+    cd .. # Wróć do głównego katalogu projektu (mandatory-task-demo)
     ```
 3.  **Zbuduj Backend**:
-    Przejdź do katalogu `backend` i zbuduj aplikację Spring Boot. Podczas tego procesu, zbudowane pliki frontendu zostaną automatycznie skopiowane do zasobów backendu.
+    Przejdź spowrotem do katalogu `mandatory-task-demo` i zbuduj aplikację Spring Boot. Podczas tego procesu, zbudowane pliki frontendu zostaną automatycznie skopiowane do zasobów backendu.
     ```bash
-    cd backend
     ./gradlew build
     ```
     Ten krok stworzy wykonywalny plik `.jar` (np. `demo-0.0.1-SNAPSHOT.jar`) w katalogu `build/libs`.
