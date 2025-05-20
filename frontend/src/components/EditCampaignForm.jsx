@@ -9,7 +9,7 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
     const [formData, setFormData] = useState({
         name: campaign.name,
         keywords: campaign.keywords || [],
-        price: campaign.price,
+        // USUNIĘTO: price: campaign.price, z inicjalizacji formData
         campaignFund: campaign.campaignFund,
         status: campaign.status,
         city: campaign.city,
@@ -150,13 +150,9 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
             setIsLoading(false);
             return;
         }
-        const price = parseFloat(formData.price);
+        // WALIDACJA CENY USUNIĘTA - cena nie jest już w formularzu ani wysyłana
         const campaignFund = parseFloat(formData.campaignFund);
-        if (isNaN(price) || price <= 0) {
-            setError("Cena musi być dodatnią liczbą.");
-            setIsLoading(false);
-            return;
-        }
+
         if (isNaN(campaignFund) || campaignFund <= 0) {
             setError("Budżet kampanii musi być dodatnią liczbą.");
             setIsLoading(false);
@@ -174,7 +170,8 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                 body: JSON.stringify({
                     name: formData.name,
                     keywordsNames: formData.keywords,
-                    price: price,
+                    // === KLUCZOWA ZMIANA: CAŁKOWICIE USUNIĘTO "price" Z PAYLOADU ===
+                    // price: price, // TEJ LINII NIE MA!
                     fund: campaignFund,
                     status: formData.status,
                     city: formData.city,
@@ -241,6 +238,8 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                 />
                 {loadingKeywords && <p>Ładowanie sugestii...</p>}
             </label>
+            {/* === KLUCZOWA ZMIANA: CAŁKOWICIE USUNIĘTO CAŁY BLOK LABEL DLA CENY === */}
+            {/*
             <label>
                 Cena :
                 <input
@@ -253,6 +252,7 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                     min="0.01"
                 />
             </label>
+            */}
             <label>
                 Budżet Kampanii:
                 <input

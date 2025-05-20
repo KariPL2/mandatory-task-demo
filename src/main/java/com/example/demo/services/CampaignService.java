@@ -160,7 +160,7 @@ public class CampaignService {
         sellerRepository.flush();
 
         existingCampaign.setName(campaignDTO.name());
-        existingCampaign.setPrice(campaignDTO.price());
+        //existingCampaign.setPrice(campaignDTO.price());
         existingCampaign.setFund(newFund);
         existingCampaign.setStatus(campaignDTO.status() != null ? campaignDTO.status() : existingCampaign.isStatus());
 

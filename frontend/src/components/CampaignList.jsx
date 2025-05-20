@@ -106,7 +106,7 @@ function CampaignList({ campaigns, isUserCampaigns, onCampaignUpdated, onCampaig
                             <p><strong>Sprzedawca:</strong> {campaign.sellerName}</p>
                             <p><strong>Słowa kluczowe:</strong> {campaign.keywordsNames ? campaign.keywordsNames.join(', ') : 'Brak'}</p>
                             <p><strong>Budżet:</strong> {campaign.fund !== undefined && campaign.fund !== null ? campaign.fund.toFixed(2) : 'N/A'} PLN</p>
-                            <p><strong>Stawka:</strong> {campaign.price !== undefined && campaign.price !== null ? campaign.price.toFixed(2) : 'N/A'} PLN</p>
+                            <p><strong>Cena:</strong> {campaign.price !== undefined && campaign.price !== null ? campaign.price.toFixed(2) : 'N/A'} PLN</p>
                             <p><strong>Status:</strong> {campaign.status ? 'Aktywna' : 'Nieaktywna'}</p>
                             {/* USUNIĘTO ODWOLANIE DO 'radius' */}
                             <p><strong>Lokalizacja:</strong> {campaign.city}</p>

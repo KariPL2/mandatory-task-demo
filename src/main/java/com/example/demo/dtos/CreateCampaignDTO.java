@@ -9,7 +9,7 @@ import java.util.List;
 public record CreateCampaignDTO(
         @NotBlank String name,
         @NotEmpty List<String> keywordsNames,
-        @NotNull Double price,
+        Double price,
         @NotNull Double fund,
         Boolean status,
         @NotBlank String city
