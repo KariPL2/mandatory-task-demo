@@ -10,7 +10,7 @@ function CreateCampaignForm({ onCampaignCreated, onCancel }) {
     const [formData, setFormData] = useState({
         name: '',
         keywords: [],
-        bidAmount: 0.01,
+        price: 0.01,
         campaignFund: 0.01,
         status: true,
         city: '',
@@ -153,10 +153,10 @@ function CreateCampaignForm({ onCampaignCreated, onCancel }) {
             setIsLoading(false);
             return;
         }
-        const bidAmount = parseFloat(formData.bidAmount);
+        const price = parseFloat(formData.price);
         const campaignFund = parseFloat(formData.campaignFund);
-        if (isNaN(bidAmount) || bidAmount <= 0) {
-            setError("Stawka musi być dodatnią liczbą.");
+        if (isNaN(price) || price <= 0) {
+            setError("Cena musi być dodatnią liczbą.");
             setIsLoading(false);
             return;
         }
@@ -177,7 +177,7 @@ function CreateCampaignForm({ onCampaignCreated, onCancel }) {
                 body: JSON.stringify({
                     name: formData.name,
                     keywordsNames: formData.keywords,
-                    price: bidAmount,
+                    price: price,
                     fund: campaignFund,
                     status: formData.status,
                     city: formData.city,
@@ -245,19 +245,19 @@ function CreateCampaignForm({ onCampaignCreated, onCancel }) {
                 {loadingKeywords && <p>Ładowanie sugestii...</p>}
             </label>
             <label>
-                Stawka (Bid Amount):
+                Cena:
                 <input
                     type="number"
-                    name="bidAmount"
+                    name="price"
                     step="0.01"
-                    value={formData.bidAmount}
+                    value={formData.price}
                     onChange={handleInputChange}
                     required
                     min="0.01"
                 />
             </label>
             <label>
-                Budżet Kampanii (Campaign Fund):
+                Budżet Kampanii:
                 <input
                     type="number"
                     name="campaignFund"

@@ -9,7 +9,7 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
     const [formData, setFormData] = useState({
         name: campaign.name,
         keywords: campaign.keywords || [],
-        bidAmount: campaign.bidAmount,
+        price: campaign.price,
         campaignFund: campaign.campaignFund,
         status: campaign.status,
         city: campaign.city,
@@ -150,10 +150,10 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
             setIsLoading(false);
             return;
         }
-        const bidAmount = parseFloat(formData.bidAmount);
+        const price = parseFloat(formData.price);
         const campaignFund = parseFloat(formData.campaignFund);
-        if (isNaN(bidAmount) || bidAmount <= 0) {
-            setError("Stawka musi być dodatnią liczbą.");
+        if (isNaN(price) || price <= 0) {
+            setError("Cena musi być dodatnią liczbą.");
             setIsLoading(false);
             return;
         }
@@ -174,7 +174,7 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                 body: JSON.stringify({
                     name: formData.name,
                     keywordsNames: formData.keywords,
-                    price: bidAmount,
+                    price: price,
                     fund: campaignFund,
                     status: formData.status,
                     city: formData.city,
@@ -242,19 +242,19 @@ function EditCampaignForm({ campaign, onCampaignEdited, onCancel }) {
                 {loadingKeywords && <p>Ładowanie sugestii...</p>}
             </label>
             <label>
-                Stawka (Bid Amount):
+                Cena :
                 <input
                     type="number"
-                    name="bidAmount"
+                    name="price"
                     step="0.01"
-                    value={formData.bidAmount}
+                    value={formData.price}
                     onChange={handleInputChange}
                     required
                     min="0.01"
                 />
             </label>
             <label>
-                Budżet Kampanii (Campaign Fund):
+                Budżet Kampanii:
                 <input
                     type="number"
                     name="campaignFund"

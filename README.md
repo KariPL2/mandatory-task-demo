@@ -47,11 +47,11 @@ Główne cele projektu to:
 ## Technologie
 
 ### Backend:
-- **Java 17**
-- **Spring Boot 3.2.x**
+- **Java 21**
+- **Spring Boot 3.4.x**
 - **Spring Data JPA**: Do interakcji z bazą danych.
 - **Hibernate**: Implementacja JPA.
-- **Maven/Gradle**: Zarządzanie zależnościami i budowaniem projektu.
+- **Gradle**: Zarządzanie zależnościami i budowaniem projektu.
 - **H2 Database**: Baza danych w pamięci (domyślnie, można skonfigurować inną).
 - **Lombok**: Ułatwienie pisania boilerplate code.
 - **RESTful API**: Do komunikacji z frontendem.
@@ -155,7 +155,7 @@ Poniżej przedstawiono kluczowe endpointy API dostępne w aplikacji wraz z przyk
             "id": "uuid-kampanii-do-edycji",
             "name": "Zaktualizowana Kampania",
             "keywords": ["obuwie", "damskie"],
-            "bidAmount": 0.35,
+            "price": 0.35,
             "fund": 75.00,
             "status": "PAUSED",
             "city": "Wrocław"
@@ -226,7 +226,7 @@ Aplikacja wykorzystuje bazę danych H2 (domyślnie, w trybie pamięciowym) z pon
 -   **`CAMPAIGN`**: Reprezentuje kampanię reklamową.
     -   `id`: Unikalny identyfikator UUID (klucz główny).
     -   `name`: Nazwa kampanii.
-    -   `bid_amount`: Maksymalna cena za kliknięcie (CPC).
+    -   `price`: Maksymalna cena za kliknięcie (CPC).
     -   `fund`: Całkowity budżet kampanii.
     -   `status`: Status kampanii (np. `ACTIVE`, `PAUSED`).
     -   `city`: Miasto, w którym kampania jest aktywna.
@@ -245,4 +245,3 @@ Aplikacja wykorzystuje bazę danych H2 (domyślnie, w trybie pamięciowym) z pon
 -   **`SELLER`** ma relację **One-to-Many** z **`CAMPAIGN`**: Jeden sprzedawca może utworzyć wiele kampanii.
 -   **`CAMPAIGN`** ma relację **Many-to-Many** z **`KEYWORD`**: Jedna kampania może być powiązana z wieloma słowami kluczowymi, a jedno słowo kluczowe może być powiązane z wieloma kampaniami.
 
-```mermaid
